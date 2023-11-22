@@ -1,3 +1,5 @@
+import SignUpForm from "./signup-form";
+
 export default function Page() {
-  return <div>Sign Up</div>;
+  return <SignUpForm />;
 }

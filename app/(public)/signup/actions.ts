@@ -62,7 +62,7 @@ export async function signup(prevState: State, formData: FormData) {
   const hash = await bcrypt.hash(password?.toString()!, saltRounds);
 
   const insertRes = await sql(
-    "insert into users (username, password) values ($1, $2) return *",
+    "insert into users (username, password) values ($1, $2) returning *",
     [username, hash]
   );
 
