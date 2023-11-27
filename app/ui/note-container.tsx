@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useNotesDispatch, useNotesState } from "../contexts/notes-context";
 import { fetchNotes } from "../lib/client/api";
+import NoteList from "./note-list";
 
 export default function NoteContainer() {
   const state = useNotesState();
@@ -25,5 +26,9 @@ export default function NoteContainer() {
     return <div>loading...</div>;
   }
 
-  return <div>note container</div>;
+  return (
+    <div>
+      <NoteList notes={state.rootNotes} />
+    </div>
+  );
 }
