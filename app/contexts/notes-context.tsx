@@ -34,11 +34,22 @@ function setRootNotes(state: NotesState, action: any) {
   };
 }
 
+function addNewNoteToRootNotes(state: NotesState, action: any) {
+  const newRootNotes = [...state.rootNotes];
+  newRootNotes.unshift(action.payload);
+  return {
+    ...state,
+    rootNotes: newRootNotes,
+  };
+}
+
 function reducer(state: NotesState, action: any) {
   console.log(state, action);
   switch (action.type) {
     case "set_root_notes":
       return setRootNotes(state, action);
+    case "add_new_note_to_root_notes":
+      return addNewNoteToRootNotes(state, action);
     default:
       return state;
   }

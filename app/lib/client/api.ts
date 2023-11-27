@@ -15,6 +15,14 @@ export async function fetchNotes(parent_id?: string) {
   return transformed;
 }
 
+export async function createNote() {
+  const res = await fetch("/api/notes", {
+    method: "POST",
+  });
+  const json = await res.json();
+  return transformJsonToNote(json);
+}
+
 function transformJsonToNote(json: any): NoteData {
   return {
     ...json,
