@@ -113,6 +113,7 @@ function changeParent(state: NotesState, action: any) {
   // get currently dragging note
   const { currentDragId, newParentId } = action;
   const currentDraggingNote = state.notesMap.get(currentDragId);
+  console.log("currentDraggingNote", currentDraggingNote);
 
   if (!currentDraggingNote) {
     return state;
@@ -120,10 +121,14 @@ function changeParent(state: NotesState, action: any) {
 
   // get old parent
   const oldParentId = currentDraggingNote.parent_id;
+  console.log("oldParentId", oldParentId);
+
   const oldParent = state.notesMap.get(oldParentId);
+  console.log("oldParent", oldParent);
 
   // get new parent
   const newParent = state.notesMap.get(newParentId);
+  console.log("newParent", newParent);
 
   if (!newParent) {
     return state;
@@ -152,6 +157,11 @@ function changeParent(state: NotesState, action: any) {
 
   // add the currently dragging note to new parent
   newParent.child_notes.push(currentDraggingNote);
+
+  // set parent id of current dragging note
+  currentDraggingNote.parent_id = newParent.id;
+
+  console.log("newState", newState);
 
   // return the new state
   return newState;

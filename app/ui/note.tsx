@@ -2,8 +2,15 @@ import { DateTime } from "luxon";
 import { NoteData } from "../lib/client/types";
 import { useNotesDispatch, useNotesState } from "../contexts/notes-context";
 import { updateParent } from "../lib/client/api";
+import NoteList from "./note-list";
 
-export default function Note({ note }: { note: NoteData }) {
+export default function Note({
+  note,
+  depth,
+}: {
+  note: NoteData;
+  depth: number;
+}) {
   const state = useNotesState();
   const dispatch = useNotesDispatch();
 
@@ -55,21 +62,26 @@ export default function Note({ note }: { note: NoteData }) {
   }
 
   return (
-    <div
-      className="p-2 text-black bg-yellow-300 border-2 border-yellow-300 hover:border-blue-700 cursor-pointer"
-      draggable
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-    >
-      <div>{note.title}</div>
-      <div>{note.id}</div>
-      <div>{note.created_at.toLocaleString(DateTime.DATETIME_SHORT)}</div>
-      <div>{note.updated_at.toLocaleString(DateTime.DATETIME_SHORT)}</div>
-      <div>{note.is_published ? "published" : "draft"}</div>
+    <div>
+      <div
+        className="p-2 text-black bg-yellow-300 border-2 border-yellow-300 hover:border-blue-700 cursor-pointer"
+        draggable
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+      >
+        <div>{note.title}</div>
+        <div>{note.id}</div>
+        <div>{note.created_at.toLocaleString(DateTime.DATETIME_SHORT)}</div>
+        <div>{note.updated_at.toLocaleString(DateTime.DATETIME_SHORT)}</div>
+        <div>{note.is_published ? "published" : "draft"}</div>
+      </div>
+      {note.child_notes?.length > 0 && (
+        <NoteList notes={note.child_notes} depth={depth + 1} />
+      )}
     </div>
   );
 }
