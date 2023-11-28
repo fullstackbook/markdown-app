@@ -39,6 +39,8 @@ function reducer(state: NotesState, action: any) {
       return sortNotes(state, action);
     case "update_current_drag_id":
       return updateCurrentDragId(state, action);
+    case "change_parent":
+      return changeParent(state, action);
     default:
       return state;
   }
@@ -101,4 +103,13 @@ function updateCurrentDragId(state: NotesState, action: any) {
     ...state,
     currentDragId: action.payload,
   };
+}
+
+function changeParent(state: NotesState, action: any) {
+  // get currently dragging note
+  // get old parent
+  // get new parent
+  // remove the currently dragging note from old parent
+  // add the currently dragging note to new parent
+  // return the new state
 }
