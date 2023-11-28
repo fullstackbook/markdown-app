@@ -35,7 +35,17 @@ export default function Note({
       return;
     }
 
-    // TODO: check if target note is descendent of current dragging note
+    // check if target note is descendent of current dragging note
+    if (
+      checkIfNoteIsDescendent(
+        state.notesMap,
+        state.notesMap.get(note.id)!,
+        state.notesMap.get(state.currentDragId!)!
+      )
+    ) {
+      alert("invalid action. cannot move note into descendent note.");
+      return;
+    }
 
     // update parent api call
     await updateParent(state.currentDragId!, note.id);
@@ -68,6 +78,28 @@ export default function Note({
       payload: childNotes,
       id: note.id,
     });
+  }
+
+  /**
+   * Check if noteA is a descendent of noteB
+   * @param notesMap
+   * @param noteA
+   * @param noteB
+   * @returns
+   */
+  function checkIfNoteIsDescendent(
+    notesMap: Map<string, NoteData>,
+    noteA: NoteData,
+    noteB: NoteData
+  ) {
+    let curNote = noteA;
+    while (curNote.parent_id) {
+      curNote = notesMap.get(curNote.parent_id)!;
+      if (curNote.id === noteB.id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   return (
