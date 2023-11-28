@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { NoteData } from "../lib/client/types";
 import { useNotesDispatch, useNotesState } from "../contexts/notes-context";
+import { updateParent } from "../lib/client/api";
 
 export default function Note({ note }: { note: NoteData }) {
   const state = useNotesState();
@@ -18,7 +19,7 @@ export default function Note({ note }: { note: NoteData }) {
     console.log("drag end");
   }
 
-  function handleDrop(e: React.DragEvent) {
+  async function handleDrop(e: React.DragEvent) {
     console.log("drop", note.id);
     console.log("current drag id", state.currentDragId);
 
@@ -30,6 +31,7 @@ export default function Note({ note }: { note: NoteData }) {
     // TODO: check if target note is descendent of current dragging note
 
     // update parent api call
+    await updateParent(state.currentDragId!, note.id);
 
     // dispatch change_parent event
   }
