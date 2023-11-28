@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { NoteData } from "../lib/client/types";
 import { useNotesDispatch, useNotesState } from "../contexts/notes-context";
-import { updateParent } from "../lib/client/api";
+import { fetchNotes, updateParent } from "../lib/client/api";
 import NoteList from "./note-list";
 
 export default function Note({
@@ -61,6 +61,15 @@ export default function Note({
     console.log("drag leave");
   }
 
+  async function handleExpand(e: React.MouseEvent) {
+    const childNotes = await fetchNotes(note.id);
+    dispatch({
+      type: "add_child_notes_to_note",
+      payload: childNotes,
+      id: note.id,
+    });
+  }
+
   return (
     <div>
       <div
@@ -79,6 +88,11 @@ export default function Note({
         <div>{note.updated_at.toLocaleString(DateTime.DATETIME_SHORT)}</div>
         <div>{note.is_published ? "published" : "draft"}</div>
       </div>
+      {note.child_count > 0 && (
+        <button className="bg-red-700 text-white p-2" onClick={handleExpand}>
+          expand
+        </button>
+      )}
       {note.child_notes?.length > 0 && (
         <NoteList notes={note.child_notes} depth={depth + 1} />
       )}

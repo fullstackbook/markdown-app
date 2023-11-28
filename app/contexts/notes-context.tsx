@@ -42,6 +42,8 @@ function reducer(state: NotesState, action: any) {
       return updateCurrentDragId(state, action);
     case "change_parent":
       return changeParent(state, action);
+    case "add_child_notes_to_note":
+      return addChildNotesToNote(state, action);
     default:
       return state;
   }
@@ -171,4 +173,19 @@ function addNotesToCache(notesMap: Map<string, NoteData>, notes: NoteData[]) {
   notes.forEach((note) => {
     notesMap.set(note.id, note);
   });
+}
+function addChildNotesToNote(state: NotesState, action: any) {
+  addNotesToCache(state.notesMap, action.payload);
+
+  const newState = {
+    ...state,
+  };
+
+  const note = newState.notesMap.get(action.id);
+
+  if (note) {
+    note.child_notes = action.payload;
+  }
+
+  return newState;
 }
