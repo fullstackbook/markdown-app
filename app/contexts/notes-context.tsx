@@ -4,6 +4,7 @@ import { NoteData } from "../lib/client/types";
 interface NotesState {
   rootNotes: NoteData[];
   currentDragId: string | null;
+  notesMap: Map<string, NoteData>;
 }
 
 export const NotesContext = createContext({} as NotesState);
@@ -49,9 +50,11 @@ function reducer(state: NotesState, action: any) {
 const initialState = {
   rootNotes: [],
   currentDragId: null,
+  notesMap: new Map<string, NoteData>(),
 };
 
 function setRootNotes(state: NotesState, action: any) {
+  addNotesToCache(state.notesMap, action.payload);
   return {
     ...state,
     rootNotes: action.payload,
@@ -59,6 +62,7 @@ function setRootNotes(state: NotesState, action: any) {
 }
 
 function addNewNoteToRootNotes(state: NotesState, action: any) {
+  addNotesToCache(state.notesMap, [action.payload]);
   const newRootNotes = [...state.rootNotes];
   newRootNotes.unshift(action.payload);
   return {
@@ -112,4 +116,11 @@ function changeParent(state: NotesState, action: any) {
   // remove the currently dragging note from old parent
   // add the currently dragging note to new parent
   // return the new state
+  return state;
+}
+
+function addNotesToCache(notesMap: Map<string, NoteData>, notes: NoteData[]) {
+  notes.forEach((note) => {
+    notesMap.set(note.id, note);
+  });
 }
