@@ -1,8 +1,11 @@
 import { DateTime } from "luxon";
+import { useState } from "react";
+
 import { NoteData } from "../lib/client/types";
 import { useNotesDispatch, useNotesState } from "../contexts/notes-context";
 import { fetchNotes, updateParent } from "../lib/client/api";
 import NoteList from "./note-list";
+import clsx from "clsx";
 
 export default function Note({
   note,
@@ -13,6 +16,7 @@ export default function Note({
 }) {
   const state = useNotesState();
   const dispatch = useNotesDispatch();
+  const [isTarget, setIsTarget] = useState(false);
 
   function handleDragStart(e: React.DragEvent) {
     console.log("drag start");
@@ -24,11 +28,13 @@ export default function Note({
 
   function handleDragEnd(e: React.DragEvent) {
     console.log("drag end");
+    setIsTarget(false);
   }
 
   async function handleDrop(e: React.DragEvent) {
     console.log("drop", note.id);
     console.log("current drag id", state.currentDragId);
+    setIsTarget(false);
 
     if (note.id === state.currentDragId) {
       alert("cannot move note into self");
@@ -64,11 +70,21 @@ export default function Note({
   }
 
   function handleDragEnter(e: React.DragEvent) {
+    e.stopPropagation();
     console.log("drag enter");
+    if (e.currentTarget === e.relatedTarget) {
+      setIsTarget(true);
+    }
   }
 
   function handleDragLeave(e: React.DragEvent) {
+    e.stopPropagation();
     console.log("drag leave");
+
+    // @ts-ignore
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsTarget(false);
+    }
   }
 
   async function handleExpand(e: React.MouseEvent) {
@@ -105,7 +121,10 @@ export default function Note({
   return (
     <div>
       <div
-        className="p-2 text-black bg-yellow-300 border-2 border-yellow-300 hover:border-blue-700 cursor-pointer"
+        className={clsx(
+          "p-2 text-black border-2 border-yellow-300 hover:border-blue-700 cursor-pointer",
+          { "bg-red-700": isTarget, "bg-yellow-300": !isTarget }
+        )}
         draggable
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
