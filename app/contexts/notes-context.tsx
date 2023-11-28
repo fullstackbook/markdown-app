@@ -111,12 +111,50 @@ function updateCurrentDragId(state: NotesState, action: any) {
 
 function changeParent(state: NotesState, action: any) {
   // get currently dragging note
+  const { currentDragId, newParentId } = action;
+  const currentDraggingNote = state.notesMap.get(currentDragId);
+
+  if (!currentDraggingNote) {
+    return state;
+  }
+
   // get old parent
+  const oldParentId = currentDraggingNote.parent_id;
+  const oldParent = state.notesMap.get(oldParentId);
+
   // get new parent
-  // remove the currently dragging note from old parent
+  const newParent = state.notesMap.get(newParentId);
+
+  if (!newParent) {
+    return state;
+  }
+
+  const newState = {
+    ...state,
+  };
+
+  // remove the currently dragging note from old parent or root notes
+  if (oldParent) {
+    oldParent.child_notes.splice(
+      oldParent.child_notes.findIndex(
+        (note: NoteData) => note.id === currentDragId
+      ),
+      1
+    );
+  } else {
+    newState.rootNotes.splice(
+      newState.rootNotes.findIndex(
+        (note: NoteData) => note.id === currentDragId
+      ),
+      1
+    );
+  }
+
   // add the currently dragging note to new parent
+  newParent.child_notes.push(currentDraggingNote);
+
   // return the new state
-  return state;
+  return newState;
 }
 
 function addNotesToCache(notesMap: Map<string, NoteData>, notes: NoteData[]) {
