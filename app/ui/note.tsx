@@ -21,6 +21,17 @@ export default function Note({ note }: { note: NoteData }) {
   function handleDrop(e: React.DragEvent) {
     console.log("drop", note.id);
     console.log("current drag id", state.currentDragId);
+
+    if (note.id === state.currentDragId) {
+      alert("cannot move note into self");
+      return;
+    }
+
+    // TODO: check if target note is descendent of current dragging note
+
+    // update parent api call
+
+    // dispatch change_parent event
   }
 
   function handleDragOver(e: React.DragEvent) {
