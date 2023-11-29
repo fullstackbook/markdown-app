@@ -24,7 +24,9 @@ export default function LoginForm() {
             className="bg-blue-700 p-2 text-white block"
           />
           {state?.errors?.username?.map((error: string) => (
-            <p className="text-red-500">{error}</p>
+            <p className="text-red-500" key={error}>
+              {error}
+            </p>
           ))}
         </div>
         <div className="flex flex-col gap-2">
@@ -36,7 +38,9 @@ export default function LoginForm() {
             className="bg-blue-700 p-2 text-white block"
           />
           {state?.errors?.password?.map((error: string) => (
-            <p className="text-red-500">{error}</p>
+            <p className="text-red-500" key={error}>
+              {error}
+            </p>
           ))}
         </div>
         <button type="submit" className="bg-red-700 text-white p-2 mt-3">
