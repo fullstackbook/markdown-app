@@ -1,9 +1,10 @@
 "use client";
 
-import { fetchNote } from "@/app/lib/client/api";
+import { fetchNote, updateNote } from "@/app/lib/client/api";
 import { NoteData } from "@/app/lib/client/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -25,5 +26,32 @@ export default function Page() {
     }
   }, [searchParams, curNote]);
 
-  return <div>{curNote?.title}</div>;
+  const handleUpdateNote = useDebouncedCallback(async (note: NoteData) => {
+    const updatedNote = await updateNote(note);
+    console.log("updated note", updatedNote);
+  }, 300);
+
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newNote = {
+      ...curNote!,
+      title: e.target.value,
+    };
+    setCurNote(newNote);
+    await handleUpdateNote(newNote);
+  }
+
+  return (
+    <div className="p-2 flex-auto w-2/3">
+      {curNote && (
+        <div className="p-2">
+          <input
+            type="text"
+            value={curNote.title}
+            className="p-2 bg-blue-700 text-yellow-300 font-bold block w-full focus:bg-red-700"
+            onChange={handleChange}
+          />
+        </div>
+      )}
+    </div>
+  );
 }

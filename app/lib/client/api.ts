@@ -38,6 +38,15 @@ export async function fetchNote(note_id: string) {
   return transformJsonToNote(json);
 }
 
+export async function updateNote(note: NoteData) {
+  const res = await fetch("/api/notes/" + note.id, {
+    method: "PUT",
+    body: JSON.stringify(note),
+  });
+  const json = await res.json();
+  return transformJsonToNote(json);
+}
+
 function transformJsonToNote(json: any): NoteData {
   return {
     ...json,
