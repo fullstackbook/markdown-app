@@ -75,10 +75,14 @@ export async function signup(prevState: State, formData: FormData) {
       .setExpirationTime("2w")
       .sign(new TextEncoder().encode(config.JWT_SECRET));
 
+    const oneDay = 24 * 60 * 60 * 1000;
+    const twoWeeks = oneDay * 14;
+
     cookies().set("jwt-token", token, {
       sameSite: "strict",
       httpOnly: true,
       secure: true,
+      expires: Date.now() + twoWeeks,
     });
 
     redirect("/dashboard");
