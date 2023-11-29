@@ -14,7 +14,7 @@ export default function CreateNoteBtn() {
 
   return (
     <button
-      className="text-white block bg-red-700 p-2 m-2"
+      className="text-white block bg-red-700 p-2 my-2"
       onClick={handleClick}
     >
       Create Note
