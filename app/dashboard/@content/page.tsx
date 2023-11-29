@@ -1,11 +1,17 @@
 "use client";
 
-import { useNotesDispatch } from "@/app/contexts/notes-context";
-import { fetchNote, updateNote } from "@/app/lib/client/api";
-import { NoteData } from "@/app/lib/client/types";
+import AceEditor from "react-ace";
+import ReactMarkdown from "react-markdown";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+
+import "ace-builds/src-noconflict/mode-markdown";
+import "ace-builds/src-noconflict/theme-github_dark";
+
+import { useNotesDispatch } from "@/app/contexts/notes-context";
+import { fetchNote, updateNote } from "@/app/lib/client/api";
+import { NoteData } from "@/app/lib/client/types";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -46,6 +52,15 @@ export default function Page() {
     await handleUpdateNote(newNote);
   }
 
+  async function handleMarkdownChange(newMarkdown: string) {
+    const newNote = {
+      ...curNote!,
+      content: newMarkdown,
+    };
+    setCurNote(newNote);
+    await handleUpdateNote(newNote);
+  }
+
   return (
     <div className="p-2 flex-auto w-2/3">
       {curNote && (
@@ -56,6 +71,24 @@ export default function Page() {
             className="p-2 bg-blue-700 text-yellow-300 font-bold block w-full focus:bg-red-700"
             onChange={handleChange}
           />
+          <div className="flex flex-row">
+            <div className="flex-1 m-2">
+              <AceEditor
+                mode="markdown"
+                theme="github_dark"
+                name="markdown-editor"
+                onChange={handleMarkdownChange}
+                value={curNote.content}
+                width="100%"
+                height="80vh"
+                wrapEnabled={true}
+                fontSize="16px"
+              />
+            </div>
+            <div className="flex-1 m-2">
+              <ReactMarkdown>{curNote.content}</ReactMarkdown>
+            </div>
+          </div>
         </div>
       )}
     </div>
