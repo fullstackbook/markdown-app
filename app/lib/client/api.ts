@@ -32,6 +32,12 @@ export async function updateParent(currentDragId: string, newParentId: string) {
   });
 }
 
+export async function fetchNote(note_id: string) {
+  const noteRes = await fetch("/api/notes/" + note_id);
+  const json = await noteRes.json();
+  return transformJsonToNote(json);
+}
+
 function transformJsonToNote(json: any): NoteData {
   return {
     ...json,
