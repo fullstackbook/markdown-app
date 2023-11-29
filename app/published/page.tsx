@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { sql } from "../lib/server/db";
 import { DateTime } from "luxon";
+import Search from "../ui/search";
 
 async function getNotes() {
   let sqlStr = "select * from notes where is_published = true";
@@ -17,6 +18,9 @@ export default async function Page() {
         Published Notes
       </h2>
       <div className="flex flex-row text-black">
+        <div className="m-2">
+          <Search />
+        </div>
         <div className="m-2">
           {notes.map((note) => {
             return (
