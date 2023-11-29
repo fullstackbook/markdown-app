@@ -6,6 +6,7 @@ import { useNotesDispatch, useNotesState } from "../contexts/notes-context";
 import { fetchNotes, updateParent } from "../lib/client/api";
 import NoteList from "./note-list";
 import clsx from "clsx";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function Note({
   note,
@@ -14,9 +15,20 @@ export default function Note({
   note: NoteData;
   depth: number;
 }) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const state = useNotesState();
   const dispatch = useNotesDispatch();
   const [isTarget, setIsTarget] = useState(false);
+
+  function handleClick(e: React.MouseEvent, id: string) {
+    e.stopPropagation();
+    console.log(id);
+    const params = new URLSearchParams(searchParams);
+    params.set("note_id", id);
+    replace(`${pathname}?${params.toString()}`);
+  }
 
   function handleDragStart(e: React.DragEvent) {
     console.log("drag start");
@@ -132,6 +144,7 @@ export default function Note({
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
+        onClick={(e) => handleClick(e, note.id)}
       >
         <div>{note.title}</div>
         <div>{note.id}</div>
