@@ -62,6 +62,15 @@ export default function Page() {
     await handleUpdateNote(newNote);
   }
 
+  async function handlePublish() {
+    const newNote = {
+      ...curNote!,
+      is_published: !curNote?.is_published,
+    };
+    setCurNote(newNote);
+    await handleUpdateNote(newNote);
+  }
+
   return (
     <div className="p-2 flex-auto w-2/3">
       {curNote && (
@@ -91,6 +100,14 @@ export default function Page() {
                 {curNote.content}
               </ReactMarkdown>
             </div>
+          </div>
+          <div className="p-2 flex flex-row gap-2">
+            <label>Published</label>
+            <input
+              type="checkbox"
+              checked={curNote.is_published}
+              onChange={handlePublish}
+            />
           </div>
         </div>
       )}
