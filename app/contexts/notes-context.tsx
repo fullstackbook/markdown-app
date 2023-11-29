@@ -44,6 +44,8 @@ function reducer(state: NotesState, action: any) {
       return changeParent(state, action);
     case "add_child_notes_to_note":
       return addChildNotesToNote(state, action);
+    case "update_note":
+      return updateNote(state, action);
     default:
       return state;
   }
@@ -187,5 +189,17 @@ function addChildNotesToNote(state: NotesState, action: any) {
     note.child_notes = action.payload;
   }
 
+  return newState;
+}
+
+function updateNote(state: NotesState, action: any) {
+  const newState = {
+    ...state,
+  };
+  const note = newState.notesMap.get(action.payload.id);
+  if (!note) {
+    return newState;
+  }
+  Object.assign(note, action.payload);
   return newState;
 }

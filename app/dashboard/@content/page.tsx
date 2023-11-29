@@ -1,5 +1,6 @@
 "use client";
 
+import { useNotesDispatch } from "@/app/contexts/notes-context";
 import { fetchNote, updateNote } from "@/app/lib/client/api";
 import { NoteData } from "@/app/lib/client/types";
 import { useSearchParams } from "next/navigation";
@@ -9,6 +10,7 @@ import { useDebouncedCallback } from "use-debounce";
 export default function Page() {
   const searchParams = useSearchParams();
   const [curNote, setCurNote] = useState<NoteData | null>(null);
+  const dispatch = useNotesDispatch();
 
   async function refreshNote(note_id: string) {
     console.log("refresh note", note_id);
@@ -29,6 +31,10 @@ export default function Page() {
   const handleUpdateNote = useDebouncedCallback(async (note: NoteData) => {
     const updatedNote = await updateNote(note);
     console.log("updated note", updatedNote);
+    dispatch({
+      type: "update_note",
+      payload: updatedNote,
+    });
   }, 300);
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
