@@ -3,14 +3,26 @@ import { sql } from "../lib/server/db";
 import { DateTime } from "luxon";
 import Search from "../ui/search";
 
-async function getNotes() {
+async function getNotes(query?: string) {
   let sqlStr = "select * from notes where is_published = true";
-  const notesRes = await sql(sqlStr);
+  let values = [];
+
+  if (query != undefined) {
+    sqlStr += " and title ilike $1";
+    values.push("%" + query + "%");
+  }
+
+  const notesRes = await sql(sqlStr, values);
   return notesRes.rows;
 }
 
-export default async function Page() {
-  const notes = await getNotes();
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: { query?: string };
+}) {
+  const query = searchParams?.query;
+  const notes = await getNotes(query);
 
   return (
     <div className="m-2">
