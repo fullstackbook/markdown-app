@@ -1,0 +1,23 @@
+.reactMarkdown h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.reactMarkdown h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.reactMarkdown ul li {
+  list-style-type: disc;
+  margin-left: 1rem;
+}
+
+.reactMarkdown ol li {
+  list-style-type: decimal;
+  margin-left: 1rem;
+}
+
+.reactMarkdown p {
+  margin-bottom: 1rem;
+}

@@ -12,6 +12,7 @@ import "ace-builds/src-noconflict/theme-github_dark";
 import { useNotesDispatch } from "@/app/contexts/notes-context";
 import { fetchNote, updateNote } from "@/app/lib/client/api";
 import { NoteData } from "@/app/lib/client/types";
+import style from "./markdown-styles.module.css";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -86,7 +87,9 @@ export default function Page() {
               />
             </div>
             <div className="flex-1 m-2">
-              <ReactMarkdown>{curNote.content}</ReactMarkdown>
+              <ReactMarkdown className={style.reactMarkdown}>
+                {curNote.content}
+              </ReactMarkdown>
             </div>
           </div>
         </div>
